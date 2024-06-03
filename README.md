@@ -1,1 +1,1 @@
-# computer-science-primer
+# Highlight Hero
