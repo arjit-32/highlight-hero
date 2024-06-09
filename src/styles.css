@@ -1,5 +1,13 @@
-.highlighted-line {
-    background-color: #90ee9075;
+.highlight-line {
+    background-color: #60b5d375;
+  }
+
+  .highlight-red{
+    background-color: rgb(197, 92, 92);
+  }
+
+  .highlight-green{
+    background-color: rgb(85, 154, 85);
   }
 
   .line-number {

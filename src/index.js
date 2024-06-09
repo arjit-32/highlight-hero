@@ -15,15 +15,12 @@ class CodeHighlighter {
   }
 
   extractCodeBlocks(markdownText) {
-    const codeBlockRegex = /```(\w+)(\s+.*)?\n([\s\S]*?)```/g;
+    const codeBlockRegex = /```(\w+)(?:[ \t]+([^\n]+))?\n([\s\S]*?)```/g;
     let match;
     const codeBlocks = [];
     
     while ((match = codeBlockRegex.exec(markdownText)) !== null) {
       const [_, lang, meta, code] = match;
-      if (meta) {
-        console.log(meta.trim()); // Log the meta information
-      }
       codeBlocks.push({ lang, meta, code });
     }
     
@@ -43,15 +40,21 @@ class CodeHighlighter {
         const lineNumberMatch = block.meta.match(lineNumberRegex);
         
         if (lineNumberMatch) {
-          const lineRange = lineNumberMatch[1].split('-').map(Number);
+          const temp = lineNumberMatch[1].split(',');
+          const colorOfLine = temp[1].trim();
+          const lineRange = temp[0].split('-');
           const startLine = lineRange[0];
           const endLine = lineRange[1];
+          console.log(temp);
+          console.log(colorOfLine);
+          let highlightClass="highlight-line";
+          if(colorOfLine=="r")  highlightClass="highlight-red";
+          if(colorOfLine=="g")  highlightClass="highlight-green";
           
           
           highlightedLines = lines.map((line, index) => {
             if (index + 1 >= startLine && index + 1 <= endLine) {
-              console.log(startLine, endLine );
-              return `<span class="highlighted-line">${line}</span>`;
+              return `<span class="${highlightClass}">${line}</span>`;
             } else {
               return line;
             }
@@ -60,7 +63,7 @@ class CodeHighlighter {
       }
   
       const codeWithHighlights = highlightedLines.join('\n');
-      console.log(codeWithHighlights)
+      
       return `<div class="code-block"><pre><code class="hljs">${codeWithHighlights}</code></pre></div>`;
     }).join('\n');
   }
