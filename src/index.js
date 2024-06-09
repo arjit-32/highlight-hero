@@ -1,5 +1,6 @@
 const hljs = require('highlight.js');
 require('highlight.js/styles/a11y-dark.css');
+require('./styles.css');
 
 class CodeHighlighter {
   constructor(options) {
@@ -23,7 +24,7 @@ class CodeHighlighter {
       if (meta) {
         console.log(meta.trim()); // Log the meta information
       }
-      codeBlocks.push({ lang, code });
+      codeBlocks.push({ lang, meta, code });
     }
     
     return codeBlocks;
@@ -31,10 +32,40 @@ class CodeHighlighter {
 
   processMarkdown(markdownText) {
     const codeBlocks = this.extractCodeBlocks(markdownText);
-    return codeBlocks.map(block => 
-      `<pre class="hljs"><code>${this.highlight(block.code, block.lang)}</code></pre>`
-    ).join('\n');
+    return codeBlocks.map(block => {
+      const highlightedCode = this.highlight(block.code, block.lang);
+      const lines = highlightedCode.split('\n');
+      let highlightedLines = lines;
+
+      
+      if (block.meta) {
+        const lineNumberRegex = /line_number={([^}]*)}/;
+        const lineNumberMatch = block.meta.match(lineNumberRegex);
+        
+        if (lineNumberMatch) {
+          const lineRange = lineNumberMatch[1].split('-').map(Number);
+          const startLine = lineRange[0];
+          const endLine = lineRange[1];
+          
+          
+          highlightedLines = lines.map((line, index) => {
+            if (index + 1 >= startLine && index + 1 <= endLine) {
+              console.log(startLine, endLine );
+              return `<span class="highlighted-line">${line}</span>`;
+            } else {
+              return line;
+            }
+          });
+        }
+      }
+  
+      const codeWithHighlights = highlightedLines.join('\n');
+      console.log(codeWithHighlights)
+      return `<div class="code-block"><pre><code class="hljs">${codeWithHighlights}</code></pre></div>`;
+    }).join('\n');
   }
+  
+  
 }
 
 module.exports = CodeHighlighter;

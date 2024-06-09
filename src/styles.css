@@ -1,0 +1,12 @@
+.highlighted-line {
+    background-color: #90ee9075;
+  }
+
+  .line-number {
+    display: inline-block;
+    width: 2em; /* Adjust as needed */
+    color: #999; /* Adjust line number color */
+    text-align: right;
+    padding-right: 0.5em; /* Adjust spacing between line number and code */
+  }
+  
