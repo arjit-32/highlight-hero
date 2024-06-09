@@ -23,7 +23,7 @@ int sum(int n){
     const highlighter = new MarkdownHighlighter();
 
     // Transform Markdown content
-    const html = highlighter.markdownToHTML(markdownText);
+    const html = highlighter.processMarkdown(markdownText);
 
     // Display transformed HTML
     document.getElementById('markdown-output').innerHTML = html;

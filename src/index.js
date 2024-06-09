@@ -1,52 +1,40 @@
 const hljs = require('highlight.js');
-const MarkdownIt = require('markdown-it');
-require('highlight.js/styles/default.css');
+require('highlight.js/styles/a11y-dark.css');
 
-class MarkdownHighlighter {
+class CodeHighlighter {
   constructor(options) {
     this.options = options || {};
-    this.md = new MarkdownIt({
-      highlight: (str, lang) => {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return '<pre class="hljs"><code>' +
-                   hljs.highlight(str, { language: lang }).value +
-                   '</code></pre>';
-          } catch (__) {}
-        }
-
-        return '<pre class="hljs"><code>' + this.md.utils.escapeHtml(str) + '</code></pre>';
-      }
-    });
   }
 
   highlight(text, language = 'plaintext') {
-    text = this.markdownToHTML(text);
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = text;
-    tempDiv.querySelectorAll('pre code').forEach((block) => {
-      hljs.highlightElement(block);
-    });
-    return tempDiv.innerHTML;
-  }
-
-  // Method to parse the code block and log the meta information
-  parseCodeBlock(codeBlock) {
-    const metaInfo = codeBlock.match(/```(\w+)\s+([\s\S]*?)\n/);
-    if (metaInfo) {
-      console.log(metaInfo[2]); // Log the meta information
-      return codeBlock.replace(metaInfo[0], `\`\`\`${metaInfo[1]}\n`); // Remove the meta info line
+    if (hljs.getLanguage(language)) {
+      return hljs.highlight(text, { language }).value;
     }
-    return codeBlock;
+    return hljs.highlightAuto(text).value; // Auto-detect language
   }
 
-  markdownToHTML(markdownText) {
-    const codeBlockRegex = /```(\w+)[\s\S]*?\n([\s\S]*?)```/g;
-    const transformedMarkdown = markdownText.replace(codeBlockRegex, (match) => {
-      return this.parseCodeBlock(match);
-    });
-    return this.md.render(transformedMarkdown);
+  extractCodeBlocks(markdownText) {
+    const codeBlockRegex = /```(\w+)(\s+.*)?\n([\s\S]*?)```/g;
+    let match;
+    const codeBlocks = [];
+    
+    while ((match = codeBlockRegex.exec(markdownText)) !== null) {
+      const [_, lang, meta, code] = match;
+      if (meta) {
+        console.log(meta.trim()); // Log the meta information
+      }
+      codeBlocks.push({ lang, code });
+    }
+    
+    return codeBlocks;
+  }
+
+  processMarkdown(markdownText) {
+    const codeBlocks = this.extractCodeBlocks(markdownText);
+    return codeBlocks.map(block => 
+      `<pre class="hljs"><code>${this.highlight(block.code, block.lang)}</code></pre>`
+    ).join('\n');
   }
 }
 
-module.exports = MarkdownHighlighter;
+module.exports = CodeHighlighter;
