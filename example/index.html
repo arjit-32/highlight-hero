@@ -6,23 +6,27 @@
   <title>Markdown Highlighter</title>
 </head>
 <body>
+  <h1>Markdown Highlighter Test</h1>
 
-  <h1>Code Highlighting</h1>
-  <pre><code><div class="test"></div></code></pre>
+  <div id="markdown-output"></div>
   <script src="../dist/markdown-highlighter.js"></script>
   <script>
-    (async () => {
-      const highlighter = new MarkdownHighlighter();
-      const code = `
-      function hello() {
-        console.log('Hello, world!');
-      }
-      `;
-      
-      // Ensure highlighter is initialized before highlighting
-      const highlightedCode = await highlighter.highlight(code, 'javascript');
-      document.getElementsByClassName('test')[0].innerHTML = highlightedCode;
-    })();
+    const markdownText = `
+\`\`\`java line_number={2-4} tabs={4}
+int sum(int n){
+  // Some comment
+  return n * (n + 1) / 2;
+}
+\`\`\`
+`;
+
+    const highlighter = new MarkdownHighlighter();
+
+    // Transform Markdown content
+    const html = highlighter.markdownToHTML(markdownText);
+
+    // Display transformed HTML
+    document.getElementById('markdown-output').innerHTML = html;
   </script>
 </body>
 </html>
