@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Highlighter</title>
+</head>
+<body>
+
+  <h1>Code Highlighting</h1>
+  <pre><code><div class="test"></div></code></pre>
+  <script src="../dist/markdown-highlighter.js"></script>
+  <script>
+    (async () => {
+      const highlighter = new MarkdownHighlighter();
+      const code = `
+      function hello() {
+        console.log('Hello, world!');
+      }
+      `;
+      
+      // Ensure highlighter is initialized before highlighting
+      const highlightedCode = await highlighter.highlight(code, 'javascript');
+      document.getElementsByClassName('test')[0].innerHTML = highlightedCode;
+    })();
+  </script>
+</body>
+</html>
