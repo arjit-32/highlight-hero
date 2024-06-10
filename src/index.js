@@ -33,12 +33,16 @@ class CodeHighlighter {
       const highlightedCode = this.highlight(block.code, block.lang);
       const lines = highlightedCode.split('\n');
       let highlightedLines = lines;
-
+      let codeWithHighlights="";
       
       if (block.meta) {
+
+        // Line Highlighting
         const lineNumberRegex = /line_number={([^}]*)}/;
         const lineNumberMatch = block.meta.match(lineNumberRegex);
-        
+        const titleregex = /title={([^}]*)}/;
+        const title = block.meta.match(titleregex);
+
         if (lineNumberMatch) {
           const temp = lineNumberMatch[1].split(',');
           const colorOfLine = temp[1].trim();
@@ -59,10 +63,18 @@ class CodeHighlighter {
               return line;
             }
           });
+
+          codeWithHighlights = highlightedLines.join('\n');
+        }
+
+        // Fileview
+        if (title) {
+          const temp = title[1];
+          console.log(temp);
+          codeWithHighlights = `<div class="filename"><p>${temp}</p>`+codeWithHighlights+`</div>`;
         }
       }
   
-      const codeWithHighlights = highlightedLines.join('\n');
       
       return `<div class="code-block"><pre><code class="hljs">${codeWithHighlights}</code></pre></div>`;
     }).join('\n');
