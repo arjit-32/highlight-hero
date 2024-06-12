@@ -148,7 +148,7 @@ class HighlightHero {
 
   // Change UI to add file name
   addFileName(highlightedCode, title){
-    return `<div class="filename"><p>${title}</p>`+highlightedCode+`</div>`;
+    return `<div class="filename">${title}</div>`+highlightedCode;
   }
 
   // Change UI to add line highlighting
@@ -227,10 +227,11 @@ class HighlightHero {
       console.log(metaData);
       
       let highlightedCode = this.highlight(block.code, block.lang);
-      highlightedCode = `<div class="code-block"><pre><code class="hljs">${highlightedCode}</code></pre></div>`
       
       if(metaData.line_number==1)
         highlightedCode = this.addLineNumbering(highlightedCode);
+
+      highlightedCode = `<div class="code-block"><pre><code class="hljs">${highlightedCode}</code></pre></div>`
 
       if(metaData.title)
         highlightedCode = this.addFileName(highlightedCode, metaData.title);

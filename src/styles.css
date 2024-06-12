@@ -11,8 +11,10 @@
   }
 
   .highlight-word{
-    background-color: #f7f7f7;
-    color: aquamarine;
+    background-color: #5daee0;
+    color: rgb(41, 51, 48);
+    padding: 2px;
+    border-radius: 2px;
   }
 
   .line-number {
@@ -24,11 +26,10 @@
   }
   
   
-  .file-name {
-    display: inline-block;
-    width: 100%;
-    background-color: #f7f7f7;
-    padding: 0.5em;
-    border-bottom: 1px solid #e1e4e8;
-    font-weight: bold;
+  .filename {
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    width: fit-content;
+    border-radius: 5px;
   }
