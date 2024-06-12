@@ -217,10 +217,11 @@ class HighlightHero {
 
   processMarkdown(markdownText) {
     const codeBlocks = this.extractCodeBlocks(markdownText);
-    let metaData =[];
+    
     
     // For Each code block 
     return codeBlocks.map(block => {
+      let metaData =[];
       if(block.rawMeta)
         metaData = this.createMetaInfo(block.rawMeta);
 
@@ -242,7 +243,7 @@ class HighlightHero {
       if(metaData.word_highlight)
         highlightedCode = this.addWordHighlighting(highlightedCode, metaData.word_highlight);
 
-      return highlightedCode;
+      return `<div id="markdown-output">${highlightedCode}</div>`
     }).join('\n');
   }
   
