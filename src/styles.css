@@ -1,35 +1,42 @@
 .highlight-line {
-    background-color: #60b5d375;
-  }
+  background-color: #60b5d375;
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
 
-  .highlight-red{
-    background-color: rgb(197, 92, 92);
-  }
+.highlight-red {
+  background-color: rgb(197, 92, 92);
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
 
-  .highlight-green{
-    background-color: rgb(85, 154, 85);
-  }
+.highlight-green {
+  background-color: rgb(85, 154, 85);
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
 
-  .highlight-word{
-    background-color: #5daee0;
-    color: rgb(41, 51, 48);
-    padding: 2px;
-    border-radius: 2px;
-  }
+.highlight-word {
+  background-color: #5daee0;
+  color: rgb(41, 51, 48);
+  padding: 2px;
+  border-radius: 2px;
+  display: inline-block; /* Ensure it stays inline */
+}
 
-  .line-number {
-    display: inline-block;
-    width: 2em; /* Adjust as needed */
-    color: #999; /* Adjust line number color */
-    text-align: right;
-    padding-right: 0.5em; /* Adjust spacing between line number and code */
-  }
-  
-  
-  .filename {
-    background: #333;
-    color: #fff;
-    padding: 5px;
-    width: fit-content;
-    border-radius: 5px;
-  }
+.line-number {
+  display: inline-block;
+  width: 2em; /* Adjust as needed */
+  color: #999; /* Adjust line number color */
+  text-align: right;
+  padding-right: 0.5em; /* Adjust spacing between line number and code */
+  user-select: none; /* Prevent line numbers from being selected */
+}
+
+.filename {
+  background: #333;
+  color: #fff;
+  padding: 5px;
+  width: fit-content;
+  border-radius: 5px;
+}
