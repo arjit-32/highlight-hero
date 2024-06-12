@@ -2,11 +2,14 @@ const hljs = require('highlight.js');
 require('highlight.js/styles/a11y-dark.css');
 require('./styles.css');
 
-class CodeHighlighter {
+class HighlightHero {
   constructor(options) {
     this.options = options || {};
   }
 
+  /* Code Highlighting 
+  * Done using Highlight.js
+  */
   highlight(text, language = 'plaintext') {
     if (hljs.getLanguage(language)) {
       return hljs.highlight(text, { language }).value;
@@ -14,73 +17,235 @@ class CodeHighlighter {
     return hljs.highlightAuto(text).value; // Auto-detect language
   }
 
+  /* Extract Code Block - Used to extract the code from markdown text ``` 
+  * Acceptable Inputs are - 
+  * 1. Just the code within enclosed ``` 
+  * ``` 
+  *   <code> 
+  * ```
+  * 
+  * 2. The Language along with Code 
+  * ```[Language-name]
+  *   <code>
+  * ```
+  * 
+  * 3. Language and the meta-data along with code. This meta data triggers features of the library
+  * ```[Language-name] [Meta Info]
+  *   <code>
+  * ```
+  * 
+  * Output - 
+  * codeBlocks array containing - Language, Meta and Code
+  */
   extractCodeBlocks(markdownText) {
-    const codeBlockRegex = /```(\w+)(?:[ \t]+([^\n]+))?\n([\s\S]*?)```/g;
+    const codeBlockRegex = /```(\w+)?(?:[ \t]*([^\n]*))?\n([\s\S]*?)```/g;
     let match;
     const codeBlocks = [];
-    
+     // Loop through all the code blocks in markdown text
     while ((match = codeBlockRegex.exec(markdownText)) !== null) {
-      const [_, lang, meta, code] = match;
-      codeBlocks.push({ lang, meta, code });
+      const [_, lang, rawMeta, code] = match;
+      codeBlocks.push({ lang, rawMeta, code });
     }
-    
     return codeBlocks;
   }
 
-  processMarkdown(markdownText) {
-    const codeBlocks = this.extractCodeBlocks(markdownText);
-    return codeBlocks.map(block => {
-      const highlightedCode = this.highlight(block.code, block.lang);
-      const lines = highlightedCode.split('\n');
-      let highlightedLines = lines;
-      let codeWithHighlights="";
-      
-      if (block.meta) {
+  createMetaInfo(rawMeta){
+    const metaData = {
+      title: "",
+      line_number: 0,
+      line_highlight: {
+          range_with_color: [],
+          range: [],
+          single_with_color: [],
+          single: []
+      },
+      word_highlight: {
+          global: [],
+          word_on_line: []
+      }
+  };
 
-        // Line Highlighting
-        const lineNumberRegex = /line_number={([^}]*)}/;
-        const lineNumberMatch = block.meta.match(lineNumberRegex);
-        const titleregex = /title={([^}]*)}/;
-        const title = block.meta.match(titleregex);
+    const line_number_regex = /ln/g;
+    const title_regex = /name=\{([^}]*)\}/g;
+    // const line_highlight_regex = /lh=\{(?:\d+|\[\d+(-\d+)?,\S\])(,(?:\d+|\[\d+(-\d+)?,\S\]))*\}/g;
+    const line_highlight_regex = /lh=\{(?:\d+|\d+,[GR]|\d+-\d+|\d+-\d+,[GR])(?: \d+| \d+,[GR]| \d+-\d+| \d+-\d+,[GR])*\}/g;
+    // const word_highlight_regex = /wh=\{(?:\s*\[\w+(?:,\s*\d+)?\]\s*|\w+)(?:,\s*(?:\[\w+(?:,\s*\d+)?\]|\w+))*\}/g;
+    const word_highlight_regex = /wh=\{(?:\S+|\[\S+,\d+\])(?: (?:\S+|\[\S+,\d+\]))*\}/g;
 
-        if (lineNumberMatch) {
-          const temp = lineNumberMatch[1].split(',');
-          const colorOfLine = temp[1].trim();
-          const lineRange = temp[0].split('-');
-          const startLine = lineRange[0];
-          const endLine = lineRange[1];
-          console.log(temp);
-          console.log(colorOfLine);
-          let highlightClass="highlight-line";
-          if(colorOfLine=="r")  highlightClass="highlight-red";
-          if(colorOfLine=="g")  highlightClass="highlight-green";
-          
-          
-          highlightedLines = lines.map((line, index) => {
-            if (index + 1 >= startLine && index + 1 <= endLine) {
-              return `<span class="${highlightClass}">${line}</span>`;
-            } else {
-              return line;
-            }
-          });
+    // Process Line Numbering
+    const line_number_match = rawMeta.match(line_number_regex);
+    (line_number_match)?metaData["line_number"]=1:metaData["line_number"]=0;
 
-          codeWithHighlights = highlightedLines.join('\n');
+    // Process Title
+    const title_match = rawMeta.match(title_regex);
+    if(title_match){
+      let title = title_match[0].match(/"[^\"]*\"/g)[0].replace(/"/g, '');
+      metaData["title"]=title;
+    }
+
+    // Process Line Highlights
+    const line_highlight_match = rawMeta.match(line_highlight_regex);
+    if (line_highlight_match) {
+        const line_highlight = line_highlight_match[0].match(/=\{([^}]*)\}/)[1];
+        let lines_array = line_highlight.split(' ');
+  
+        for(let i=0;i<lines_array.length;i++){
+          if(lines_array[i].includes('-') && lines_array[i].includes(',')){
+            let temp = lines_array[i].split(',');
+            let lineRange = temp[0].split('-');
+            let startLine = Number(lineRange[0]);
+            let endLine = Number(lineRange[1]);
+            let colorOfLine = temp[1]==='R'?0:1; // 0 - Red, 1 - Green
+            metaData["line_highlight"]["range_with_color"].push([startLine, endLine, colorOfLine]);
+          }else if(lines_array[i].includes('-')){
+            let lineRange = lines_array[i].split('-');
+            let startLine = Number(lineRange[0]);
+            let endLine = Number(lineRange[1]);
+            metaData["line_highlight"]["range"].push([startLine, endLine]);
+          }else if(lines_array[i].includes(',')){
+            let temp = lines_array[i].split(',');
+            let line = Number(temp[0]);
+            let colorOfLine = temp[1]==='R'?0:1; // 0 - Red, 1 - Green
+            metaData["line_highlight"]["single_with_color"].push([line, colorOfLine]); 
+          } else{
+            let line = Number(lines_array[i]);
+            metaData["line_highlight"]["single"].push(line);
+          }
         }
+    }
 
-        // Fileview
-        if (title) {
-          const temp = title[1];
-          console.log(temp);
-          codeWithHighlights = `<div class="filename"><p>${temp}</p>`+codeWithHighlights+`</div>`;
+    // Process Word Highlights
+    const word_highlight_match = rawMeta.match(word_highlight_regex);
+    if (word_highlight_match) {
+        const word_highlight = word_highlight_match[0].match(/=\{([^}]*)\}/)[1];
+        let words_array = word_highlight.split(' ');
+
+        for(let i=0;i<words_array.length;i++){
+          if(words_array[i].includes(',')){
+            let temp = words_array[i].split(',');
+            let word = temp[0];
+            let lineNumber = temp[1]; 
+            metaData["word_highlight"]["word_on_line"].push([word, lineNumber]);
+          }else{
+            let word = words_array[i];
+            metaData["word_highlight"]["global"].push(word);
+          }
+        }
+    }
+  
+    return metaData;
+  }
+
+  // Change UI to add line numbers
+  addLineNumbering(highlightedCode){
+    const lines = highlightedCode.split('\n');
+    for(let i=0;i<lines.length;i++){
+      lines[i] = `<span class="line-number">${i+1}</span>${lines[i]}`;
+    }
+    
+    return lines.join('\n');
+  }
+
+  // Change UI to add file name
+  addFileName(highlightedCode, title){
+    return `<div class="filename"><p>${title}</p>`+highlightedCode+`</div>`;
+  }
+
+  // Change UI to add line highlighting
+  addLineHighlighting(code, meta){
+    const lines = code.split('\n');
+    let highlightedLines = [];
+
+    for(let i=0;i<lines.length;i++){
+      let line = lines[i];
+      if(meta["single"].includes(i+1)){
+        line = `<span class="highlight-line">${line}</span>`;
+      }
+      if(meta["single_with_color"].length>0){
+        for(let j=0;j<meta["single_with_color"].length;j++){
+          if(meta["single_with_color"][j][0]==i+1){
+            let color = meta["single_with_color"][j][1]==0?"highlight-red":"highlight-green";
+            line = `<span class="${color}">${line}</span>`;
+          }
         }
       }
-  
+      if(meta["range"].length>0){
+        for(let j=0;j<meta["range"].length;j++){
+          if(i+1>=meta["range"][j][0] && i+1<=meta["range"][j][1]){
+            line = `<span class="highlight-line">${line}</span>`;
+          }
+        }
+      }
+      if(meta["range_with_color"].length>0){
+        for(let j=0;j<meta["range_with_color"].length;j++){
+          if(i+1>=meta["range_with_color"][j][0] && i+1<=meta["range_with_color"][j][1]){
+            let color = meta["range_with_color"][j][2]==0?"highlight-red":"highlight-green";
+            line = `<span class="${color}">${line}</span>`;
+          }
+        }
+      }
+      highlightedLines.push(line);
+    }
+    return highlightedLines.join('\n');
+  }
+
+  // Change UI to add word highlighting
+  addWordHighlighting(code, meta){
+    const lines = code.split('\n');
+    let highlightedLines = [];
+    for(let i=0;i<lines.length;i++){ 
+      let line = lines[i];
+      if(meta["word_on_line"].length>0){
+        for(let j=0;j<meta["word_on_line"].length;j++){
+          if(meta["word_on_line"][j][1]==i+1){
+            let word = meta["word_on_line"][j][0];
+            line = line.replace(new RegExp(word, 'g'), `<span class="highlight-word">${word}</span>`);
+          }
+        }
+      }
+      if(meta["global"].length>0){
+        for(let j=0;j<meta["global"].length;j++){
+          let word = meta["global"][j];
+          line = line.replace(new RegExp(word, 'g'), `<span class="highlight-word">${word}</span>`);          
+        }
+      }
+      highlightedLines.push(line);
+    }
+    return highlightedLines.join('\n');
+  }
+
+
+  processMarkdown(markdownText) {
+    const codeBlocks = this.extractCodeBlocks(markdownText);
+    let metaData =[];
+    
+    // For Each code block 
+    return codeBlocks.map(block => {
+      if(block.rawMeta)
+        metaData = this.createMetaInfo(block.rawMeta);
+
+      console.log(metaData);
       
-      return `<div class="code-block"><pre><code class="hljs">${codeWithHighlights}</code></pre></div>`;
+      let highlightedCode = this.highlight(block.code, block.lang);
+      highlightedCode = `<div class="code-block"><pre><code class="hljs">${highlightedCode}</code></pre></div>`
+      
+      if(metaData.line_number==1)
+        highlightedCode = this.addLineNumbering(highlightedCode);
+
+      if(metaData.title)
+        highlightedCode = this.addFileName(highlightedCode, metaData.title);
+
+      if(metaData.line_highlight)
+        highlightedCode = this.addLineHighlighting(highlightedCode, metaData.line_highlight);
+      
+      if(metaData.word_highlight)
+        highlightedCode = this.addWordHighlighting(highlightedCode, metaData.word_highlight);
+
+      return highlightedCode;
     }).join('\n');
   }
   
   
 }
 
-module.exports = CodeHighlighter;
+module.exports = HighlightHero;

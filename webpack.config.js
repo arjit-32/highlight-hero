@@ -4,8 +4,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'markdown-highlighter.js',
-    library: 'MarkdownHighlighter',
+    filename: 'highlight-hero.js',
+    library: 'HighlightHero',
     libraryTarget: 'umd',
     globalObject: 'this'
   },

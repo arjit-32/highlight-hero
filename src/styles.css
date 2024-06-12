@@ -10,6 +10,11 @@
     background-color: rgb(85, 154, 85);
   }
 
+  .highlight-word{
+    background-color: #f7f7f7;
+    color: aquamarine;
+  }
+
   .line-number {
     display: inline-block;
     width: 2em; /* Adjust as needed */
@@ -18,3 +23,12 @@
     padding-right: 0.5em; /* Adjust spacing between line number and code */
   }
   
+  
+  .file-name {
+    display: inline-block;
+    width: 100%;
+    background-color: #f7f7f7;
+    padding: 0.5em;
+    border-bottom: 1px solid #e1e4e8;
+    font-weight: bold;
+  }
