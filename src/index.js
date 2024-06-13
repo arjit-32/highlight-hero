@@ -5,6 +5,9 @@ require('./styles.css');
 class HighlightHero {
   constructor(options) {
     this.options = options || {};
+    
+       // Add event listener for handling copy button clicks
+       document.addEventListener('click', this.handleCopyClick.bind(this));
   }
 
   /* Code Highlighting 
@@ -254,9 +257,6 @@ class HighlightHero {
       console.log(metaData);
       
       let highlightedCode = this.highlight(block.code, block.lang);
-
-       // Add event listener for handling copy button clicks
-      document.addEventListener('click', this.handleCopyClick.bind(this));
 
       if(metaData.line_number==1)
         highlightedCode = this.addLineNumbering(highlightedCode);
