@@ -17,6 +17,32 @@ class HighlightHero {
     return hljs.highlightAuto(text).value; // Auto-detect language
   }
 
+  // Method to handle copying code to clipboard
+  handleCopyClick(event) {
+    if (event.target.classList.contains('copy')) {
+      const codeBlock = event.target.closest('.code-block');
+      if (codeBlock) {
+        const codeElement = codeBlock.querySelector('code.hljs');
+        if (codeElement) {
+          const range = document.createRange();
+          range.selectNode(codeElement);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(range);
+
+          try {
+            const successful = document.execCommand('copy');
+            const msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copying text command was ' + msg);
+          } catch (err) {
+            console.log('Unable to copy text');
+          }
+
+          window.getSelection().removeAllRanges();
+        }
+      }
+    }
+  }
+
   /* Extract Code Block - Used to extract the code from markdown text ``` 
   * Acceptable Inputs are - 
   * 1. Just the code within enclosed ``` 
@@ -228,11 +254,14 @@ class HighlightHero {
       console.log(metaData);
       
       let highlightedCode = this.highlight(block.code, block.lang);
-      
+
+       // Add event listener for handling copy button clicks
+      document.addEventListener('click', this.handleCopyClick.bind(this));
+
       if(metaData.line_number==1)
         highlightedCode = this.addLineNumbering(highlightedCode);
 
-      highlightedCode = `<div class="code-block"><pre><code class="hljs">${highlightedCode}</code></pre></div>`
+      highlightedCode = `<div class="code-block"><button class="copy">Copy</button><pre><code class="hljs">${highlightedCode}</code></pre></div>`
 
       if(metaData.title)
         highlightedCode = this.addFileName(highlightedCode, metaData.title);
@@ -246,8 +275,6 @@ class HighlightHero {
       return `<div id="markdown-output">${highlightedCode}</div>`
     }).join('\n');
   }
-  
-  
 }
 
 module.exports = HighlightHero;

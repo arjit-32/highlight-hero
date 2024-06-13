@@ -6,59 +6,23 @@
   <title>Markdown Highlighter</title>
 </head>
 <body>
-  <h1>Markdown Highlighter Test</h1>
+  <h1>Markdown Code Highlighter</h1>
 
   <div id="result"></div>
   <script src="../dist/highlight-hero.js"></script>
   <script>
     const markdownText = `
-\`\`\`java ln lh={2-5} name={"QuickSort.java"} wh={pivot,21}
-
-// Java implementation of QuickSort
-import java.io.*;
-
-class GFG {
-
-    // A utility function to swap two elements
-    static void swap(int[] arr, int i, int j)
-    {
-        int temp = arr[i];
-        arr[i] = arr[j];
-        arr[j] = temp;
+\`\`\`java ln lh={5,G} wh={props,4} name={"MyComponents"} 
+/*Explain[1-4] This will be the explanation for line 1 to 4, I cn  write a lot ogf thiaonndso ais dnasfn ls jksn sdnfgnja adihfg*/
+class Arjit{
+    public static void main(String[] args){
+        System.out.println("Hello World");
     }
-
-\`\`\`
-
-
-
-\`\`\`js ln lh={5 12-15,G} name={"JSCarousel.js"}
-const JSCarousel = ({ carouselSelector, slideSelector }) => {
-  /*
-   * Initialize variables to keep track of carousel state and
-   * references to different elements.
-   */
-  let currentSlideIndex = 0;
-  let prevBtn, nextBtn;
-
-  // Find the carousel element in the DOM.
-  const carousel = document.querySelector(carouselSelector);
-
-  // If carousel element is not found, log an error and exit.
-  if (!carousel) {
-    console.error("Specify a valid selector for the carousel.");
-    return null;
-  }
-
-  // Find all slides within the carousel
-  const slides = carousel.querySelectorAll(slideSelector);
-
-  // If no slides are found, log an error and exit.
-  if (!slides.length) {
-    console.error("Specify a valid selector for slides.");
-    return null;
-  }
-
-
+    
+    public void sum(int x,int y){
+      System.out.println(x+y);
+    }
+}
 \`\`\`
 `;
 
