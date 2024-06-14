@@ -300,7 +300,7 @@ class HighlightHero {
     return error;
   }
 
-  processMarkdown(markdownText) {
+  HighlightCode(markdownText) {
     const codeBlocks = this.extractCodeBlocks(markdownText);
     
     // For Each code block 
@@ -327,8 +327,8 @@ class HighlightHero {
 
       if(metaData.check_syntax==1){
         const syntaxErrors = this.checkSyntax(block.code, block.lang);
-        console.log('Syntax error found:', syntaxErrors ? syntaxErrors : 'None');
-        highlightedCode = `${highlightedCode}<div class="error">${syntaxErrors}</div>`
+        if(syntaxErrors)
+          highlightedCode = `${highlightedCode}<div class="error">${syntaxErrors}</div>`
       }
 
       return `<div id="markdown-output">${highlightedCode}</div>`

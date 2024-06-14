@@ -12,25 +12,20 @@
   <script src="../dist/highlight-hero.js"></script>
   <script>
     const markdownText = `
-\`\`\`java
-    import java.util.*
+\`\`\`java check
+    import java.util.*;
     class Vidu{
       public static void mai(String s[]){
         System.out.println("Hello World");
       }
     }
 \`\`\`
-
-\`\`\`javascript ln name={"Test.js"} check
-    let x = 1;
-    x=========3;
-\`\`\`
 `;
 
     const highlighter = new HighlightHero();
 
     // Transform Markdown content
-    const html = highlighter.processMarkdown(markdownText);
+    const html = highlighter.HighlightCode(markdownText);
 
     // Display transformed HTML
     document.getElementById('result').innerHTML = html;
