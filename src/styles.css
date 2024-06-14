@@ -50,6 +50,7 @@
 
 .code-block pre{
   margin-top: 0;
+  margin-bottom: 1px;
 }
 
 .code-block{
@@ -64,4 +65,11 @@
   cursor: pointer;
   background: #525252;
   color: #fff;
+}
+
+.error{
+  background: #f44336e6;
+    color: white;
+    padding: 5px;
+    font-family: monospace;
 }

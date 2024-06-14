@@ -309,11 +309,6 @@ class HighlightHero {
       if(block.rawMeta)
         metaData = this.createMetaInfo(block.rawMeta);
       
-      if(metaData.check_syntax==1){
-        const syntaxErrors = this.checkSyntax(block.code, block.lang);
-        console.log('Syntax error found:', syntaxErrors ? syntaxErrors : 'None');
-      }
-      
       let highlightedCode = this.highlight(block.code, block.lang);
 
       if(metaData.line_number==1)
@@ -329,6 +324,12 @@ class HighlightHero {
       
       if(metaData.word_highlight)
         highlightedCode = this.addWordHighlighting(highlightedCode, metaData.word_highlight);
+
+      if(metaData.check_syntax==1){
+        const syntaxErrors = this.checkSyntax(block.code, block.lang);
+        console.log('Syntax error found:', syntaxErrors ? syntaxErrors : 'None');
+        highlightedCode = `${highlightedCode}<div class="error">${syntaxErrors}</div>`
+      }
 
       return `<div id="markdown-output">${highlightedCode}</div>`
     }).join('\n');
