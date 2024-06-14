@@ -1,4 +1,6 @@
 const hljs = require('highlight.js');
+const esprima = require('esprima');
+const { Parser } = require('jsjavaparser');
 require('highlight.js/styles/a11y-dark.css');
 require('./styles.css');
 
@@ -244,9 +246,33 @@ class HighlightHero {
   }
 
 
+  checkSyntax(code) {
+    const errors = [];
+    
+    try {
+      // Parse code with Esprima
+      const ast = esprima.parseScript(code, {
+        tolerant: true,
+        loc: true,
+        range: true,
+        tokens: true
+      });
+  
+      // Handle tokens if needed
+      if (ast.tokens.length > 0) {
+        // Process tokens
+      }
+    } catch (error) {
+      // If parsing fails, push the error into the errors array
+      errors.push(error);
+    }
+    
+    return errors.map(error => error.toString());
+  }
+
   processMarkdown(markdownText) {
     const codeBlocks = this.extractCodeBlocks(markdownText);
-    
+   
     
     // For Each code block 
     return codeBlocks.map(block => {
@@ -254,7 +280,8 @@ class HighlightHero {
       if(block.rawMeta)
         metaData = this.createMetaInfo(block.rawMeta);
 
-      console.log(metaData);
+      const syntaxErrors = this.checkSyntax(block.code);
+      console.log('Syntax errors found:', syntaxErrors.length > 0 ? syntaxErrors : 'None');
       
       let highlightedCode = this.highlight(block.code, block.lang);
 

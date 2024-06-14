@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "css-loader": "^7.1.2",
+    "esprima": "^4.0.1",
     "highlight.js": "^11.9.0",
     "style-loader": "^4.0.0"
   }
