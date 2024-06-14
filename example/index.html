@@ -12,11 +12,21 @@
   <script src="../dist/highlight-hero.js"></script>
   <script>
     const markdownText = `
-\`\`\`java ln name={"MyComponents"} 
+\`\`\`javascript ln name={"MyComponents.javascript"} 
 const a = 12;
 a = 59
 a====48;
 \`\`\`
+
+\`\`\`java ln name={"MyComponents.java"} 
+import java.util.*;
+class Arjit{
+    public static void main(String s[]){
+      System.out.println("Hello");
+    }
+}
+\`\`\`
+
 `;
 
     const highlighter = new HighlightHero();

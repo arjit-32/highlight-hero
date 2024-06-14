@@ -1,6 +1,6 @@
 const hljs = require('highlight.js');
 const esprima = require('esprima');
-const { Parser } = require('jsjavaparser');
+const { parse } = require('java-parser');
 require('highlight.js/styles/a11y-dark.css');
 require('./styles.css');
 
@@ -84,6 +84,7 @@ class HighlightHero {
     const metaData = {
       title: "",
       line_number: 0,
+      check_syntax: 0,
       line_highlight: {
           range_with_color: [],
           range: [],
@@ -97,6 +98,7 @@ class HighlightHero {
   };
 
     const line_number_regex = /ln/g;
+    const check_syntax_regex = /check/g;
     const title_regex = /name=\{([^}]*)\}/g;
     // const line_highlight_regex = /lh=\{(?:\d+|\[\d+(-\d+)?,\S\])(,(?:\d+|\[\d+(-\d+)?,\S\]))*\}/g;
     const line_highlight_regex = /lh=\{(?:\d+|\d+,[GR]|\d+-\d+|\d+-\d+,[GR])(?: \d+| \d+,[GR]| \d+-\d+| \d+-\d+,[GR])*\}/g;
@@ -106,6 +108,10 @@ class HighlightHero {
     // Process Line Numbering
     const line_number_match = rawMeta.match(line_number_regex);
     (line_number_match)?metaData["line_number"]=1:metaData["line_number"]=0;
+
+    // Processing Check Syntax
+    const check_syntax_match = rawMeta.match(check_syntax_regex);
+    (check_syntax_match)?metaData["check_syntax"]=1:metaData["check_syntax"]=0;
 
     // Process Title
     const title_match = rawMeta.match(title_regex);
@@ -245,43 +251,68 @@ class HighlightHero {
     return highlightedLines.join('\n');
   }
 
-
-  checkSyntax(code) {
-    const errors = [];
-    
+  parseJavascript(code) {
+    let error = '';
     try {
-      // Parse code with Esprima
-      const ast = esprima.parseScript(code, {
+      esprima.parseScript(code, {
         tolerant: true,
         loc: true,
         range: true,
         tokens: true
       });
-  
-      // Handle tokens if needed
-      if (ast.tokens.length > 0) {
-        // Process tokens
+    } catch (e) {
+      if (e.lineNumber && e.column) {
+        error = `Error detected in line ${e.lineNumber}, column ${e.column}`;
+      } else {
+        error = 'Error in the above code';
       }
-    } catch (error) {
-      // If parsing fails, push the error into the errors array
-      errors.push(error);
     }
-    
-    return errors.map(error => error.toString());
+    return error;
+  }
+
+  parseJava(code) {
+    let error = '';
+    try {
+      parse(code);
+    } catch (e) {
+      const regex = /line: (\d+), column: (\d+)/;
+      const match = e.message.match(regex);
+      if (match) {
+        error = `Error detected in line ${parseInt(match[1], 10)}, column ${parseInt(match[2], 10)}`;
+      } else {
+        error = 'Error in the above code';
+      }
+    }
+    return error;
+  }
+
+  checkSyntax(code, lang) {
+    let error = '';
+
+    if (lang === 'javascript') {
+      error = this.parseJavascript(code);
+    }
+
+    if (lang === 'java') {
+      error = this.parseJava(code);
+    }
+
+    return error;
   }
 
   processMarkdown(markdownText) {
     const codeBlocks = this.extractCodeBlocks(markdownText);
-   
     
     // For Each code block 
     return codeBlocks.map(block => {
       let metaData =[];
       if(block.rawMeta)
         metaData = this.createMetaInfo(block.rawMeta);
-
-      const syntaxErrors = this.checkSyntax(block.code);
-      console.log('Syntax errors found:', syntaxErrors.length > 0 ? syntaxErrors : 'None');
+      
+      if(metaData.check_syntax==1){
+        const syntaxErrors = this.checkSyntax(block.code, block.lang);
+        console.log('Syntax error found:', syntaxErrors ? syntaxErrors : 'None');
+      }
       
       let highlightedCode = this.highlight(block.code, block.lang);
 
