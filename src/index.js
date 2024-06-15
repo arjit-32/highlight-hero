@@ -9,7 +9,9 @@ class HighlightHero {
     this.options = options || {};
     
        // Add event listener for handling copy button clicks
+       if (typeof document !== 'undefined') {
        document.addEventListener('click', this.handleCopyClick.bind(this));
+       }
   }
 
   /* Code Highlighting 

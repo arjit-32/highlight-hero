@@ -2,7 +2,13 @@
   "name": "highlight-hero",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/markdown-highlighter.js",
+  "main": "dist/highlight-hero.js",
+  "exports": {
+    ".": "./dist/highlight-hero.js"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
