@@ -1,8 +1,8 @@
-const hljs = require('highlight.js');
-const esprima = require('esprima');
-const { parse } = require('java-parser');
-require('highlight.js/styles/a11y-dark.css');
-require('./styles.css');
+import hljs from 'highlight.js';
+import esprima from 'esprima';
+import { parse } from 'java-parser';
+import 'highlight.js/styles/a11y-dark.css';
+import './styles.css'
 
 class HighlightHero {
   constructor(options) {
@@ -338,4 +338,4 @@ class HighlightHero {
   }
 }
 
-module.exports = HighlightHero;
+export default HighlightHero;

@@ -1,13 +1,19 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+import { fileURLToPath } from 'url';
+
+// Get __dirname equivalent in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'highlight-hero.js',
-    library: 'HighlightHero',
-    libraryTarget: 'umd',
-    globalObject: 'this'
+    library: {
+      type: 'module'
+    },
   },
   module: {
     rules: [
@@ -26,5 +32,8 @@ module.exports = {
         use: ['style-loader', 'css-loader']
       }
     ]
+  },
+  experiments: {
+    outputModule: true
   }
 };

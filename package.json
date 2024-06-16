@@ -2,6 +2,7 @@
   "name": "highlight-hero",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/highlight-hero.js",
   "exports": {
     ".": "./dist/highlight-hero.js"

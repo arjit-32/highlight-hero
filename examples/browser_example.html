@@ -9,8 +9,9 @@
   <h1>Markdown Code Highlighter</h1>
 
   <div id="result"></div>
-  <script src="../dist/highlight-hero.js"></script>
-  <script>
+  <script type="module">
+    import HighlightHero from '../dist/highlight-hero.js';
+
     const markdownText = `
 \`\`\`java ln check
     import java.util.*;
