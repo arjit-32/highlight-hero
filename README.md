@@ -383,3 +383,17 @@ export default defineConfig({
 ## Contributing
 
 If you have any suggestions, bug reports, or feature requests, feel free to open an issue or submit a pull request. Your feedback is highly appreciated. We are always looking for ways to improve Highlight Hero and make it more useful for developers.
+
+## Future Features 
+
+[ ] Code Explain (on hovering show a tooltip maybe that can explain code better) 
+
+[ ] Code Folding (Just like VS-Code let users fold methods)
+
+[ ] Custom Themes 
+
+[ ] Give View
+
+	[ ] Tab View : Give tabs of Code, on clicking shows code of that file 
+ 
+	[ ] Directory View : Show collapsible folders and files on left bar and code of a particular file on right ( just like VSCode ) 
