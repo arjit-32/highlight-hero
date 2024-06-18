@@ -92,42 +92,13 @@ code.hljs {
     font-weight: bold
   }
 }
-.highlight-line {
-  background-color: #60b5d375;
-  display: inline-block; /* Ensure it stays inline */
-  width: 100%;
+#markdown-output{
+  border: 1px solid #d9d9d9;
 }
 
-.highlight-red {
-  background-color: rgb(197, 92, 92);
-  display: inline-block; /* Ensure it stays inline */
-  width: 100%;
-}
 
-.highlight-green {
-  background-color: rgb(85, 154, 85);
-  display: inline-block; /* Ensure it stays inline */
-  width: 100%;
-}
-
-.highlight-word {
-  background-color: #5daee0;
-  color: rgb(41, 51, 48);
-  padding: 2px;
-  border-radius: 2px;
-  display: inline-block; /* Ensure it stays inline */
-}
-
-.line-number {
-  display: inline-block;
-  width: 2em; /* Adjust as needed */
-  color: #999; /* Adjust line number color */
-  text-align: right;
-  padding-right: 0.5em; /* Adjust spacing between line number and code */
-  user-select: none; /* Prevent line numbers from being selected */
-}
-
-.filename {
+#markdown-output .filename {
+  font-size: 1rem;
   background: #333;
   color: #fff;
   padding: 5px;
@@ -138,20 +109,13 @@ code.hljs {
   border-top: 4px solid #9eadff;
 }
 
-#markdown-output{
-  border: 1px solid #d9d9d9;
-}
-
-.code-block pre{
-  margin-top: 0;
-  margin-bottom: 1px;
-}
-
-.code-block{
+#markdown-output .code-block{
+  font-size: 1.25rem;
   position: relative;
 }
 
-.copy{
+
+#markdown-output .code-block .copy{
   position: absolute;
   right: 0;
   top: 0;
@@ -161,9 +125,57 @@ code.hljs {
   color: #fff;
 }
 
-.error{
+
+#markdown-output .code-block pre{
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 1px;
+}
+
+#markdown-output .code-block pre .hljs .line-number {
+  display: inline-block;
+  width: 2em; /* Adjust as needed */
+  color: #999; /* Adjust line number color */
+  text-align: right;
+  padding-right: 0.5em; /* Adjust spacing between line number and code */
+  user-select: none; /* Prevent line numbers from being selected */
+}
+
+#markdown-output .code-block pre .hljs .highlight-line {
+  background-color: #60b5d375;
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
+
+#markdown-output .code-block pre .hljs .highlight-red {
+  background-color: rgb(197, 92, 92);
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
+
+#markdown-output .code-block pre .hljs .highlight-green {
+  background-color: rgb(85, 154, 85);
+  display: inline-block; /* Ensure it stays inline */
+  width: 100%;
+}
+
+#markdown-output .code-block pre .hljs .highlight-word {
+  background-color: #5daee0;
+  color: rgb(41, 51, 48);
+  padding: 2px;
+  border-radius: 2px;
+  display: inline-block; /* Ensure it stays inline */
+}
+
+
+
+
+
+
+#markdown-output .error{
   background: #f44336e6;
     color: white;
     padding: 5px;
     font-family: monospace;
+    font-size: 1rem;
 }
