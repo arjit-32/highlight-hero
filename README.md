@@ -300,9 +300,3 @@ public class HelloWorld {
 ## Contributing
 
 If you have any suggestions, bug reports, or feature requests, feel free to open an issue or submit a pull request. Your feedback is highly appreciated. Always looking for ways to improve Highlight Hero and make it more useful for developers.
-
-
-
-	[ ] Tab View : Give tabs of Code, on clicking shows code of that file 
- 
-	[ ] Directory View : Show collapsible folders and files on left bar and code of a particular file on right ( just like VSCode ) 
