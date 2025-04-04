@@ -43,100 +43,13 @@ document.getElementById('result').innerHTML = html;
 
 You are provided with bunch of options that can be directly used in your markdown.
 
-## Integration into your Site 
+## Integration into your Astro Site 
 
 ```
 npm install highlight-hero
 ```
 
 Once you have downloaded the highlight-hero you will be able to see dist folder with 2 files highlight-hero.js and highlight-hero.css. These 2 files are all it takes to beautify your code. 
-
-### Integrate with Plain Html
-
-```
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown Highlighter</title>
-  // Stylesheet
-  <link rel="stylesheet" href="../dist/highlight-hero.css">
-</head>
-
-<body>
-  <h1>Markdown Code Highlighter</h1>
-
-  <div id="result"></div>
-
-  <script type="module">
-
-    import HighlightHero from '../dist/highlight-hero.js';
-    
-    const markdownText = `
-\`\`\`java ln check lh={2-4} name={"SomeName.java"}
-    import java.util.*;
-    clss Arjit{
-      public static void main(String s[]){
-        System.out.println("Hello World");
-      }
-    }
-\`\`\`
-`;
-
-    const highlighter = new HighlightHero();
-
-    const html = highlighter.HighlightCode(markdownText);
-
-    document.getElementById('result').innerHTML = html;
-  </script>
-</body>
-</html>
-```
-
-
-### Integrate with React app 
-
-```
-import { useEffect, useState } from 'react'
-import HighlightHero from '../node_modules/highlight-hero';  // Adjust the path if necessary
-
-function App() {
-  const [highlightedCode, setHighlightedCode] = useState('');
-
-  useEffect(() => {
-    const markdownText = `
-\`\`\`java ln check
-    import java.util.*;
-    class Arjit{
-      public static void main(String s[]){
-        System.out.println("Hello World");
-      }
-    }
-\`\`\`
-    `;
-
-    const highlighter = new HighlightHero();
-    const html = highlighter.HighlightCode(markdownText);
-
-    setHighlightedCode(html);
-  }, []);
-
-  return (
-    <>
-     <div>
-      <h1>Markdown Code Highlighter</h1>
-      <div id="result" dangerouslySetInnerHTML={{ __html: highlightedCode }}></div>
-    </div>
-    </>
-  )
-}
-
-export default App
-```
-
-### Integration with Astro 
-
 This library was written for Astro and once you have your astro integration in place all you need to worry about is write your blogs in markdown format and nothing else. 
 
 `Step 1:` : Create a file named `astro-highlight-hero.js` in the root of your astro website.
@@ -386,17 +299,9 @@ public class HelloWorld {
 
 ## Contributing
 
-If you have any suggestions, bug reports, or feature requests, feel free to open an issue or submit a pull request. Your feedback is highly appreciated. We are always looking for ways to improve Highlight Hero and make it more useful for developers.
+If you have any suggestions, bug reports, or feature requests, feel free to open an issue or submit a pull request. Your feedback is highly appreciated. Always looking for ways to improve Highlight Hero and make it more useful for developers.
 
-## Future Features 
 
-[ ] Code Explain (on hovering show a tooltip maybe that can explain code better) 
-
-[ ] Code Folding (Just like VS-Code let users fold methods)
-
-[ ] Custom Themes 
-
-[ ] Give View
 
 	[ ] Tab View : Give tabs of Code, on clicking shows code of that file 
  
